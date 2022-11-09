@@ -1,0 +1,68 @@
+﻿@page "/shoppinglist"
+@using LearnBlazorShoppingList.Data;
+
+<PageTitle>@title</PageTitle>
+
+<h3>ShoppingList</h3>
+
+
+
+<input placeholder="Grocery name" @bind="name"/>
+<input placeholder="Grocery Price" @bind="price"/>
+<button @onclick="AddGrocery">Add Grocery</button>
+<br/>
+
+<table class="table table-sm">
+    <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th></th>
+    </tr>
+
+    @foreach (var grocery in groceries)
+    {
+        <Item GroceryItem="@grocery" OnGroceryPriceIncrease="OnPriceIncrease"/>
+    }
+</table>
+
+
+
+<!-- Example of one way databind: whenever sum is changed in code this will update-->
+<h2>Total: $@sum</h2>
+
+@code {
+    private double sum;
+    private string title = "Shopping List";
+    private string name;
+    private double price;
+
+    private List<Grocery> groceries = new List<Grocery>();
+
+    private void AddGrocery()
+    {
+        if (!string.IsNullOrWhiteSpace(name) && price > 0)
+        {
+            Grocery item = new Grocery() { Name = name, Price = price };
+            groceries.Add(item);
+
+            //this will reset the input fields
+            name = string.Empty;
+            price = 0;
+
+        }
+        UpdateTotal();
+
+
+
+    }
+
+    private void UpdateTotal()
+    {
+        sum = groceries.Sum(x => x.Price);
+    }
+
+    public void OnPriceIncrease()
+    {
+        UpdateTotal();
+    }
+}

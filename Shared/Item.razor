@@ -1,0 +1,25 @@
+﻿@using LearnBlazorShoppingList.Data
+
+<tr>
+    <td>@GroceryItem.Name</td>
+    <td>@GroceryItem.Price</td>
+    <td>
+        <button class="btn-sm float-right" @onclick="AddPrice">
+            + Add $1
+        </button>
+    </td>
+</tr>
+
+@code {
+    [Parameter]
+    public Grocery GroceryItem { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnGroceryPriceIncrease { get; set; }
+
+    private async Task AddPrice()
+    {
+        GroceryItem.Price += 1;
+        await OnGroceryPriceIncrease.InvokeAsync();
+    }
+}
