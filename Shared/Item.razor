@@ -19,7 +19,12 @@
 
     private async Task AddPrice()
     {
+        // this only updates price of item. If this was all we wanted then async task and event callback wouldnt be neccessarry
         GroceryItem.Price += 1;
+        // this is needed because once we call AddPrice and price is increased here, we want shopping list to call a method (OnPriceIncreased) 
+        //     each time AddPrice is called to recalculate total that is why this method needs to be async task and use an event callback
+        // this line "triggers" the event which will then call OnPriceIncreased inside ShoppingList
         await OnGroceryPriceIncrease.InvokeAsync();
     }
+    
 }

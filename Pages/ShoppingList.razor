@@ -6,11 +6,34 @@
 <h3>ShoppingList</h3>
 
 
+<!-- THIS WAS WHAT WE HAD BEFORE USING EDITFORM
 
 <input placeholder="Grocery name" @bind="name"/>
 <input placeholder="Grocery Price" @bind="price"/>
 <button @onclick="AddGrocery">Add Grocery</button>
 <br/>
+
+-->
+
+
+<!--Had OnSubmit at first but that let you submit invalid data so OnValidSubmit is neccessary-->
+<EditForm Model="@GroceryItem" OnValidSubmit="AddGrocery">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <p>
+        <label>
+            Name:
+            <InputText @bind-Value="GroceryItem.Name" />
+        </label>
+    </p>
+    <p>
+        <label>
+            Price:
+            <InputNumber @bind-Value="GroceryItem.Price" />
+        </label>
+    </p>
+    <button type="submit">Add Grocery</button>
+</EditForm>
 
 <table class="table table-sm">
     <tr>
@@ -35,28 +58,33 @@
     private string title = "Shopping List";
     private string name;
     private double price;
+    private Grocery GroceryItem = new Grocery();
 
     private List<Grocery> groceries = new List<Grocery>();
 
     private void AddGrocery()
     {
-        if (!string.IsNullOrWhiteSpace(name) && price > 0)
-        {
-            Grocery item = new Grocery() { Name = name, Price = price };
-            groceries.Add(item);
+        // now all input validation is done through form
+        groceries.Add(GroceryItem);
+        GroceryItem = new Grocery();
+
+        // This is what we had before the EditForm
+        //if (!string.IsNullOrWhiteSpace(name) && price > 0)
+        //{        
+            //Grocery item = new Grocery() { Name = name, Price = price };
+            //groceries.Add(item);
 
             //this will reset the input fields
-            name = string.Empty;
-            price = 0;
+            //name = string.Empty;
+            //price = 0;       
+        //}
 
-        }
+
         UpdateTotal();
-
-
 
     }
 
-    private void UpdateTotal()
+    public void UpdateTotal()
     {
         sum = groceries.Sum(x => x.Price);
     }
